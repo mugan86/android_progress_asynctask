@@ -17,4 +17,9 @@ public class Utils {
         progressBarDialog.show();
         return progressBarDialog;
     }
+
+    public static int getProgress(int current_position, int total_items)
+    {
+        return (int) ((current_position / (float) total_items) * 100);
+    }
 }
