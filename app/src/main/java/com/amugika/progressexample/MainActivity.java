@@ -8,20 +8,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amugika.progressexample.server.GetLoadData;
 
 public class MainActivity extends AppCompatActivity {
     private TextView load_dataTextView;
+    private LinearLayout progressLinearLayout;
+    private RelativeLayout dataRelativeLayout;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         load_dataTextView = (TextView) findViewById(R.id.load_dataTextView);
+        progressLinearLayout = (LinearLayout) findViewById(R.id.progressLinearLayout);
+        dataRelativeLayout = (RelativeLayout) findViewById(R.id.dataRelativeLayout);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -29,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Datuak kargatzen...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                new GetLoadData(MainActivity.this, load_dataTextView).execute();
+                new GetLoadData(MainActivity.this, load_dataTextView, progressLinearLayout, dataRelativeLayout, toolbar).execute();
             }
         });
 
-        new GetLoadData(MainActivity.this, load_dataTextView).execute();
+        new GetLoadData(MainActivity.this, load_dataTextView, progressLinearLayout, dataRelativeLayout, toolbar).execute();
     }
 
     @Override
@@ -45,9 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
