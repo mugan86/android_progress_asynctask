@@ -3,7 +3,11 @@ package com.amugika.progressexample.server;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 
 import com.amugika.progressexample.ConstantValues;
@@ -26,12 +30,20 @@ public class GetLoadData extends AsyncTask<String,Integer,ArrayList<Mountain>> {
     private Activity activity;
     private ProgressDialog progressBarDialog;
     private TextView load_dataTextView;
+    private LinearLayout progressLinearLayout;
+    private RelativeLayout dataRelativeLayout;
+    private Toolbar toolbar;
 
-    public GetLoadData(Activity activity, TextView load_dataTextView)
+    public GetLoadData(Activity activity, TextView load_dataTextView,
+                       LinearLayout progressLinearLayout, RelativeLayout dataRelativeLayout,
+                       Toolbar toolbar)
     {
         this.activity = activity;
         this.mountain_list = new ArrayList<>();
         this.load_dataTextView = load_dataTextView;
+        this.progressLinearLayout = progressLinearLayout;
+        this.dataRelativeLayout = dataRelativeLayout;
+        this.toolbar = toolbar;
     }
 
     @Override
@@ -39,6 +51,10 @@ public class GetLoadData extends AsyncTask<String,Integer,ArrayList<Mountain>> {
     {
         super.onPreExecute();
         progressBarDialog = Utils.startProgressDialog(activity);
+        progressBarDialog.cancel();
+        toolbar.setVisibility(View.GONE);
+        progressLinearLayout.setVisibility(View.VISIBLE);
+        dataRelativeLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -62,7 +78,7 @@ public class GetLoadData extends AsyncTask<String,Integer,ArrayList<Mountain>> {
                 }
                 else
                 {
-                    publishProgress((int) ((i / (float) mountains_list_json_array.length()) * 100));
+                    publishProgress(Utils.getProgress(i, mountains_list_json_array.length()));
                 }
 
                 // Escape early if cancel() is called
@@ -84,6 +100,9 @@ public class GetLoadData extends AsyncTask<String,Integer,ArrayList<Mountain>> {
         if (result != null)
         {
             load_dataTextView.setText("Mendi kopurua: " + result.size());
+            progressLinearLayout.setVisibility(View.GONE);
+            dataRelativeLayout.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -101,5 +120,5 @@ public class GetLoadData extends AsyncTask<String,Integer,ArrayList<Mountain>> {
             progressBarDialog.dismiss();
             progressBarDialog.cancel();
         }
-     }
+    }
 }
